@@ -5,7 +5,7 @@
   
   <br><br>
   
-  **A modern, comprehensive utility suite for developers and everyday users**
+  **Toolie is a webapp with all the tools required in your daily life usage**
   
   <br>
   
