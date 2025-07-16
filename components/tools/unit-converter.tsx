@@ -51,7 +51,7 @@ export function UnitConverterTool() {
     const fromCategory = getUnitCategory(fromUnit);
     const toCategory = getUnitCategory(toUnit);
 
-    if (fromCategory !== toCategory || !fromCategory) {
+    if (fromCategory !== toCategory || !fromCategory || !toCategory) {
       setConvertedValue("Incompatible units");
       return;
     }
