@@ -3,6 +3,9 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Heart } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
@@ -12,6 +15,9 @@ interface ToolCardProps {
   icon: LucideIcon;
   onClick: () => void;
   className?: string;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
+  usageCount?: number;
 }
 
 export function ToolCard({
@@ -20,6 +26,9 @@ export function ToolCard({
   icon: Icon,
   onClick,
   className,
+  isFavorite = false,
+  onToggleFavorite,
+  usageCount = 0,
 }: ToolCardProps) {
   return (
     <motion.div
@@ -39,15 +48,41 @@ export function ToolCard({
           <CardTitle className="text-xl font-semibold text-dark-gray group-hover:text-primary-blue transition-colors duration-300" style={{ fontFamily: 'Poppins, sans-serif' }}>
             {title}
           </CardTitle>
-          <motion.div
-            whileHover={{ rotate: 360, scale: 1.2 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Icon className="h-7 w-7 text-primary-blue group-hover:text-blue-600 transition-colors duration-300" />
-          </motion.div>
+          <div className="flex items-center gap-2">
+            {onToggleFavorite && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 p-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite();
+                }}
+              >
+                <Heart
+                  className={cn(
+                    "h-4 w-4 transition-colors",
+                    isFavorite ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-red-500"
+                  )}
+                />
+              </Button>
+            )}
+            <motion.div
+              whileHover={{ rotate: 360, scale: 1.2 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Icon className="h-7 w-7 text-primary-blue group-hover:text-blue-600 transition-colors duration-300" />
+            </motion.div>
+          </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-secondary-gray group-hover:text-gray-600 transition-colors duration-300" style={{ fontFamily: 'Poppins, sans-serif' }}>{description}</p>
+          <p className="text-sm text-secondary-gray group-hover:text-gray-600 transition-colors duration-300 mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>{description}</p>
+          
+          {usageCount > 0 && (
+            <Badge variant="secondary" className="text-xs">
+              Used {usageCount} time{usageCount !== 1 ? 's' : ''}
+            </Badge>
+          )}
         </CardContent>
         
         {/* Animated Border Effect */}
