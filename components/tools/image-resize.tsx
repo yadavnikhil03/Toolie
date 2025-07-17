@@ -79,42 +79,92 @@ export function ImageResizeTool() {
   };
 
   const compressToTargetSize = async (file: File, targetWidth: number, targetHeight: number, targetFormat: string, targetSizeBytes: number): Promise<{ dataUrl: string, finalQuality: number, finalSize: number }> => {
-    let minQuality = 1;
-    let maxQuality = 100;
-    let bestResult = "";
-    let finalQuality = 80;
-    let finalSize = 0;
+    // If no specific dimensions, start with original and scale down if needed
+    const img = new Image();
+    const originalUrl = URL.createObjectURL(file);
+    
+    return new Promise((resolve) => {
+      img.onload = async () => {
+        let currentWidth = targetWidth || img.width;
+        let currentHeight = targetHeight || img.height;
+        
+        // If maintaining aspect ratio and only one dimension specified
+        if (maintainAspectRatio) {
+          if (targetWidth && !targetHeight) {
+            currentHeight = img.height * (targetWidth / img.width);
+          } else if (targetHeight && !targetWidth) {
+            currentWidth = img.width * (targetHeight / img.height);
+          }
+        }
+        
+        let bestResult = "";
+        let finalQuality = 80;
+        let finalSize = 0;
+        let scaleFactor = 1;
 
-    // Binary search for optimal quality
-    for (let i = 0; i < 15; i++) {
-      const currentQuality = Math.floor((minQuality + maxQuality) / 2);
-      const result = await resizeImage(file, targetWidth, targetHeight, currentQuality, targetFormat);
+        // First try with original dimensions and binary search quality
+        for (let attempt = 0; attempt < 3; attempt++) {
+          const testWidth = Math.floor(currentWidth * scaleFactor);
+          const testHeight = Math.floor(currentHeight * scaleFactor);
+          
+          let minQuality = 1;
+          let maxQuality = 100;
+          let bestQualityResult = "";
+          let bestQuality = 1;
+          
+          // Binary search for optimal quality at current dimensions
+          for (let i = 0; i < 12; i++) {
+            const currentQuality = Math.floor((minQuality + maxQuality) / 2);
+            const result = await resizeImage(file, testWidth, testHeight, currentQuality, targetFormat);
+            
+            // Convert data URL to blob to get accurate file size
+            const response = await fetch(result);
+            const blob = await response.blob();
+            const actualSize = blob.size;
+            
+            if (actualSize <= targetSizeBytes) {
+              bestQualityResult = result;
+              bestQuality = currentQuality;
+              finalSize = actualSize;
+              minQuality = currentQuality + 1;
+            } else {
+              maxQuality = currentQuality - 1;
+            }
+
+            if (minQuality > maxQuality) break;
+          }
+          
+          if (bestQualityResult && finalSize <= targetSizeBytes) {
+            bestResult = bestQualityResult;
+            finalQuality = bestQuality;
+            break;
+          }
+          
+          // If still too large, reduce dimensions by 20%
+          scaleFactor *= 0.8;
+          
+          // Don't go below 100px width
+          if (currentWidth * scaleFactor < 100) break;
+        }
+        
+        // If still no result, use minimum quality with heavily reduced dimensions
+        if (!bestResult) {
+          const minWidth = Math.max(100, Math.floor(currentWidth * 0.5));
+          const minHeight = Math.floor(minWidth * (currentHeight / currentWidth));
+          bestResult = await resizeImage(file, minWidth, minHeight, 1, targetFormat);
+          finalQuality = 1;
+          
+          const response = await fetch(bestResult);
+          const blob = await response.blob();
+          finalSize = blob.size;
+        }
+        
+        URL.revokeObjectURL(originalUrl);
+        resolve({ dataUrl: bestResult, finalQuality, finalSize });
+      };
       
-      // Convert data URL to approximate file size
-      const base64Data = result.split(',')[1];
-      const approximateSize = Math.floor((base64Data.length * 3) / 4 * 0.8); // More accurate estimation
-      
-      if (approximateSize <= targetSizeBytes) {
-        bestResult = result;
-        finalQuality = currentQuality;
-        finalSize = approximateSize;
-        minQuality = currentQuality + 1;
-      } else {
-        maxQuality = currentQuality - 1;
-      }
-
-      if (minQuality > maxQuality) break;
-    }
-
-    if (!bestResult) {
-      // Fallback to minimum quality
-      bestResult = await resizeImage(file, targetWidth, targetHeight, 1, targetFormat);
-      finalQuality = 1;
-      const base64Data = bestResult.split(',')[1];
-      finalSize = Math.floor((base64Data.length * 3) / 4 * 0.8);
-    }
-
-    return { dataUrl: bestResult, finalQuality, finalSize };
+      img.src = originalUrl;
+    });
   };
 
   const getTargetSizeInBytes = () => {
@@ -144,11 +194,13 @@ export function ImageResizeTool() {
         let finalSize = 0;
 
         if (useTargetSize && targetSizeBytes > 0) {
+          // For target size, prefer JPEG for better compression unless PNG specified
+          const compressionFormat = format === 'original' ? 'jpeg' : format;
           const result = await compressToTargetSize(
             imageData.original,
             targetWidth,
             targetHeight,
-            format,
+            compressionFormat,
             targetSizeBytes
           );
           processed = result.dataUrl;
@@ -162,9 +214,10 @@ export function ImageResizeTool() {
             quality[0],
             format
           );
-          // Calculate final size for regular processing
-          const base64Data = processed.split(',')[1];
-          finalSize = Math.floor((base64Data.length * 3) / 4 * 0.8);
+          // Calculate final size for regular processing using blob
+          const response = await fetch(processed);
+          const blob = await response.blob();
+          finalSize = blob.size;
         }
 
         return { ...imageData, processed, finalQuality, finalSize };
@@ -365,9 +418,12 @@ export function ImageResizeTool() {
             )}
             
             {useTargetSize && (
-              <p className="text-xs text-gray-500 mt-2">
-                The tool will automatically adjust quality to reach your target file size.
-              </p>
+              <div className="text-xs text-gray-600 mt-2 p-2 bg-blue-50 rounded border border-blue-200">
+                <p className="font-medium mb-1">🎯 Smart Compression Mode:</p>
+                <p>• Automatically adjusts quality AND dimensions if needed</p>
+                <p>• Prefers JPEG format for better compression</p>
+                <p>• May reduce image size to reach target file size</p>
+              </div>
             )}
           </div>
 
