@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { motion } from "framer-motion";
 import { QrCode, Download, Copy, RefreshCw } from 'lucide-react';
+import QRCode from 'qrcode';
 
 export function QrCodeGenTool() {
   const [text, setText] = React.useState("");
@@ -25,18 +26,20 @@ export function QrCodeGenTool() {
 
     setIsGenerating(true);
     try {
-      // Using QR Server API with enhanced options
-      const baseUrl = "https://api.qrserver.com/v1/create-qr-code/";
-      const params = new URLSearchParams({
-        size: `${size[0]}x${size[0]}`,
-        data: text,
-        ecc: errorCorrection,
-        format: format.toLowerCase(),
-        download: "0"
-      });
+      // Use the qrcode library for better control and offline generation
+      const options = {
+        width: size[0],
+        errorCorrectionLevel: errorCorrection as 'L' | 'M' | 'Q' | 'H',
+        type: 'image/png' as const,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      };
 
-      const url = `${baseUrl}?${params.toString()}`;
-      setQrCodeUrl(url);
+      const dataUrl = await QRCode.toDataURL(text, options);
+      setQrCodeUrl(dataUrl);
     } catch (error) {
       console.error("Error generating QR code:", error);
       setQrCodeUrl("");
@@ -48,7 +51,7 @@ export function QrCodeGenTool() {
     if (qrCodeUrl) {
       const link = document.createElement('a');
       link.href = qrCodeUrl;
-      link.download = `qr-code-${Date.now()}.${format.toLowerCase()}`;
+      link.download = `qr-code-${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -78,7 +81,7 @@ export function QrCodeGenTool() {
     }, 500); // Debounce for 500ms
 
     return () => clearTimeout(timeoutId);
-  }, [text, size, errorCorrection, format]);
+  }, [text, size, errorCorrection]);
 
   return (
     <div className="space-y-6" style={{ fontFamily: 'Poppins, sans-serif' }}>

@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { Hash, Copy, FileText, Shield } from 'lucide-react';
+import CryptoJS from 'crypto-js';
 
 export function HashGeneratorTool() {
   const [inputText, setInputText] = React.useState("");
@@ -13,40 +14,24 @@ export function HashGeneratorTool() {
   const [hashResult, setHashResult] = React.useState("");
   const [copied, setCopied] = React.useState(false);
 
-  // Simple hash implementations (for demonstration - in production, use crypto libraries)
-  const generateMD5 = async (text: string) => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest('MD5', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  // Hash generation functions using CryptoJS
+  const generateMD5 = (text: string) => {
+    return CryptoJS.MD5(text).toString();
   };
 
-  const generateSHA1 = async (text: string) => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const generateSHA1 = (text: string) => {
+    return CryptoJS.SHA1(text).toString();
   };
 
-  const generateSHA256 = async (text: string) => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const generateSHA256 = (text: string) => {
+    return CryptoJS.SHA256(text).toString();
   };
 
-  const generateSHA512 = async (text: string) => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest('SHA-512', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const generateSHA512 = (text: string) => {
+    return CryptoJS.SHA512(text).toString();
   };
 
-  const generateHash = async () => {
+  const generateHash = () => {
     if (!inputText.trim()) {
       setHashResult("Please enter text to hash");
       return;
@@ -56,20 +41,19 @@ export function HashGeneratorTool() {
       let result = "";
       switch (hashType) {
         case "MD5":
-          // Note: MD5 is not available in crypto.subtle, using SHA-256 as fallback
-          result = await generateSHA256(inputText);
+          result = generateMD5(inputText);
           break;
         case "SHA-1":
-          result = await generateSHA1(inputText);
+          result = generateSHA1(inputText);
           break;
         case "SHA-256":
-          result = await generateSHA256(inputText);
+          result = generateSHA256(inputText);
           break;
         case "SHA-512":
-          result = await generateSHA512(inputText);
+          result = generateSHA512(inputText);
           break;
         default:
-          result = await generateSHA256(inputText);
+          result = generateSHA256(inputText);
       }
       setHashResult(result);
     } catch (error) {
@@ -118,7 +102,7 @@ export function HashGeneratorTool() {
         className="space-y-4"
       >
         <div>
-          <Label className="text-dark-gray font-medium mb-2 block flex items-center">
+          <Label className="text-dark-gray font-medium mb-2 flex items-center">
             <FileText className="h-4 w-4 mr-2" />
             Input Text
           </Label>
@@ -131,7 +115,7 @@ export function HashGeneratorTool() {
         </div>
 
         <div>
-          <Label className="text-dark-gray font-medium mb-2 block flex items-center">
+          <Label className="text-dark-gray font-medium mb-2 flex items-center">
             <Hash className="h-4 w-4 mr-2" />
             Hash Algorithm
           </Label>
@@ -172,7 +156,7 @@ export function HashGeneratorTool() {
         className="space-y-4"
       >
         <div>
-          <Label className="text-dark-gray font-medium mb-2 block flex items-center">
+          <Label className="text-dark-gray font-medium mb-2 flex items-center">
             <Shield className="h-4 w-4 mr-2" />
             {getHashIcon(hashType)} {hashType} Hash
           </Label>

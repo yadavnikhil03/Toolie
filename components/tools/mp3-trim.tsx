@@ -113,7 +113,7 @@ export function Mp3TrimTool() {
     }
   };
 
-  const processAudio = () => {
+  const processAudio = async () => {
     if (!currentFile) {
       alert("Please select an audio file first");
       return;
@@ -124,14 +124,105 @@ export function Mp3TrimTool() {
       return;
     }
 
-    // Note: In a real implementation, you would use Web Audio API or send to a backend
-    // For now, we'll create a download link with the original file
-    const link = document.createElement('a');
-    link.href = currentFile.url;
-    link.download = `trimmed_${currentFile.name.replace(/\.[^/.]+$/, "")}.${outputFormat}`;
-    link.click();
+    setIsLoading(true);
+    
+    try {
+      // Create a Web Audio context for processing
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      
+      // Load the audio file
+      const arrayBuffer = await currentFile.file.arrayBuffer();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      
+      // Calculate sample ranges for trimming
+      const sampleRate = audioBuffer.sampleRate;
+      const startSample = Math.floor(startTime[0] * sampleRate);
+      const endSample = Math.floor(endTime[0] * sampleRate);
+      const trimmedLength = endSample - startSample;
+      
+      // Create a new audio buffer with trimmed audio
+      const trimmedBuffer = audioContext.createBuffer(
+        audioBuffer.numberOfChannels,
+        trimmedLength,
+        sampleRate
+      );
+      
+      // Copy the trimmed audio data
+      for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
+        const originalData = audioBuffer.getChannelData(channel);
+        const trimmedData = trimmedBuffer.getChannelData(channel);
+        for (let i = 0; i < trimmedLength; i++) {
+          trimmedData[i] = originalData[startSample + i];
+        }
+      }
+      
+      // Convert to WAV blob (simple implementation)
+      const wavBlob = audioBufferToWav(trimmedBuffer);
+      
+      // Create download link
+      const url = URL.createObjectURL(wavBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `trimmed_${currentFile.name.replace(/\.[^/.]+$/, "")}.wav`;
+      link.click();
+      
+      // Clean up
+      URL.revokeObjectURL(url);
+      audioContext.close();
+      
+    } catch (error) {
+      console.error('Error processing audio:', error);
+      alert('Error processing audio. Please try again.');
+    }
+    
+    setIsLoading(false);
+  };
 
-    alert(`Audio would be trimmed from ${startTime[0]}s to ${endTime[0]}s and converted to ${outputFormat.toUpperCase()}. In a full implementation, this would use Web Audio API or server-side processing.`);
+  // Helper function to convert AudioBuffer to WAV blob
+  const audioBufferToWav = (audioBuffer: AudioBuffer): Blob => {
+    const numChannels = audioBuffer.numberOfChannels;
+    const sampleRate = audioBuffer.sampleRate;
+    const format = 1; // PCM
+    const bitDepth = 16;
+    
+    const bytesPerSample = bitDepth / 8;
+    const blockAlign = numChannels * bytesPerSample;
+    
+    const buffer = audioBuffer.getChannelData(0);
+    const length = buffer.length;
+    const arrayBuffer = new ArrayBuffer(44 + length * bytesPerSample);
+    const view = new DataView(arrayBuffer);
+    
+    // WAV header
+    const writeString = (offset: number, string: string) => {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    };
+    
+    writeString(0, 'RIFF');
+    view.setUint32(4, 36 + length * bytesPerSample, true);
+    writeString(8, 'WAVE');
+    writeString(12, 'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, format, true);
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * blockAlign, true);
+    view.setUint16(32, blockAlign, true);
+    view.setUint16(34, bitDepth, true);
+    writeString(36, 'data');
+    view.setUint32(40, length * bytesPerSample, true);
+    
+    // Convert float samples to 16-bit PCM
+    let offset = 44;
+    for (let i = 0; i < length; i++) {
+      const sample = Math.max(-1, Math.min(1, buffer[i]));
+      view.setInt16(offset, sample * 0x7FFF, true);
+      offset += 2;
+    }
+    
+    return new Blob([arrayBuffer], { type: 'audio/wav' });
   };
 
   const removeFile = (index: number) => {
