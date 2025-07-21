@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,32 +9,32 @@
 @layer base {
   :root {
     --background: 0 0% 100%; 
-    --foreground: 222.2 84% 4.9%; 
+    --foreground: 215 25% 27%; 
 
     --card: 0 0% 100%; 
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 27%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 27%;
 
-    --primary: 222.2 47.4% 11.2%; 
+    --primary: 214 84% 56%; 
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96%; 
-    --secondary-foreground: 222.2 84% 4.9%;
+    --secondary: 214 32% 91%; 
+    --secondary-foreground: 215 25% 27%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
+    --accent: 214 32% 91%;
+    --accent-foreground: 215 25% 27%;
 
-    --destructive: 0 72.2% 50.6%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%; 
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 214 32% 91%; 
+    --input: 214 32% 91%;
+    --ring: 214 84% 56%;
 
     --radius: 0.75rem;
   }
@@ -73,7 +75,7 @@
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     overflow-x: hidden;
   }
   
@@ -83,21 +85,20 @@
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: #f8fafc;
     border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: #e2e8f0;
     border-radius: 10px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #f1f5f9;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: #cbd5e1;
   }
 
-
   ::selection {
-    background: #e0e7ff;
-    color: #1e293b;
+    background: #dbeafe;
+    color: #1e40af;
   }
 }

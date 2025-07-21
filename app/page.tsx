@@ -178,54 +178,93 @@ export default function HomePage() {
   const CurrentToolComponent = openTool ? tools[openTool].component : null;
 
   return (
-    <HudLayout>
-      <main className="container relative z-10 flex min-h-screen flex-col p-4 md:p-8">
-        {/* Header Section */}
-        <div className="mb-8 text-center">
-          <h1 className="text-6xl md:text-8xl font-bold mb-4 text-dark-gray" style={{ fontFamily: 'Caveat, cursive' }}>
-            <NeonTypewriter text="TOOLIE" delay={0.5} />
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="border-b border-gray-100">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <div className="text-2xl font-bold text-gray-900">
+              Toolie
+            </div>
+            <nav className="hidden md:flex space-x-8">
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Tools</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Categories</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">About</a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-16">
+        {/* Hero Section */}
+        <div className="text-center mb-20">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+            All Online Tools in{" "}
+            <span className="text-blue-600">"One Box"</span>
           </h1>
-          <div className="text-xl md:text-2xl text-secondary-gray" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            <NeonTypewriter text="Your Modern Utility Suite" delay={1.5} />
+          <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+            No need to bookmark the tools you like separately. Toolie is a free all-in-one toolbox solution created to ease your life by preventing bookmark mess.
+          </p>
+        </div>
+
+        {/* Search Section */}
+        <div className="mb-16">
+          <div className="max-w-2xl mx-auto">
+            <ToolSearch
+              value={searchQuery}
+              onChange={setSearchQuery}
+            />
           </div>
         </div>
 
-        {/* Search and Categories */}
-        <div className="mb-8 space-y-6">
-          <ToolSearch
-            value={searchQuery}
-            onChange={setSearchQuery}
-          />
-          
+        {/* Tool Categories */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Tool Categories</h2>
           <ToolCategories
             selectedCategory={selectedCategory}
             onCategorySelect={setSelectedCategory}
           />
         </div>
 
-        <div className="w-full max-w-6xl mx-auto">
-          {/* Main Tools Grid */}
-          <section className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {/* Tools Grid */}
+        <div className="mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredTools.map(([key, tool], index) => (
-              <div key={key}>
-                <ToolCard
-                  title={tool.title}
-                  description={tool.description}
-                  icon={tool.icon}
-                  onClick={() => handleOpenTool(key as ToolKey)}
-                />
-              </div>
+              <ToolCard
+                key={key}
+                title={tool.title}
+                description={tool.description}
+                icon={tool.icon}
+                onClick={() => handleOpenTool(key as ToolKey)}
+                className="bg-white border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-200 rounded-lg p-6"
+              />
             ))}
-          </section>
+          </div>
 
           {filteredTools.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No tools found matching your criteria.</p>
-              <p className="text-gray-400 text-sm mt-2">Try adjusting your search or category filter.</p>
+            <div className="text-center py-20">
+              <p className="text-gray-500 text-xl mb-2">No tools found matching your criteria.</p>
+              <p className="text-gray-400">Try adjusting your search or category filter.</p>
             </div>
           )}
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-100 bg-gray-50">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-gray-900 mb-4">Toolie</div>
+            <p className="text-gray-600 mb-6">Made with ❤️ for developers and creators</p>
+            <div className="flex justify-center space-x-6">
+              <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">About</a>
+              <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">Privacy</a>
+              <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">Terms</a>
+              <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">Contact</a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       {/* Tool Modal */}
       {openTool && (
@@ -237,7 +276,7 @@ export default function HomePage() {
           {CurrentToolComponent && (
             <React.Suspense fallback={
               <div className="flex items-center justify-center min-h-[200px]">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-blue"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               </div>
             }>
               <CurrentToolComponent />
@@ -245,7 +284,6 @@ export default function HomePage() {
           )}
         </ToolModal>
       )}
-
-    </HudLayout>
+    </div>
   );
 }

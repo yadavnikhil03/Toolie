@@ -31,63 +31,53 @@ export function ToolCard({
   usageCount = 0,
 }: ToolCardProps) {
   return (
-    <motion.div
+    <div
       className={cn(
-        "relative cursor-pointer rounded-xl transition-all duration-300 ease-in-out group",
+        "group cursor-pointer rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-blue-300 hover:shadow-lg",
         className
       )}
-      whileHover={{ scale: 1.05, y: -5 }}
-      whileTap={{ scale: 0.95 }}
       onClick={onClick}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
     >
-      <Card className="h-full w-full border-2 border-gray-100 bg-white shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl hover:border-primary-blue/50 group-hover:bg-gray-50/50 backdrop-blur-sm">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-          <CardTitle className="text-xl font-semibold text-dark-gray group-hover:text-primary-blue transition-colors duration-300" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            {title}
-          </CardTitle>
-          <div className="flex items-center gap-2">
-            {onToggleFavorite && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 p-0"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleFavorite();
-                }}
-              >
-                <Heart
-                  className={cn(
-                    "h-4 w-4 transition-colors",
-                    isFavorite ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-red-500"
-                  )}
-                />
-              </Button>
-            )}
-            <motion.div
-              whileHover={{ rotate: 360, scale: 1.2 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Icon className="h-7 w-7 text-primary-blue group-hover:text-blue-600 transition-colors duration-300" />
-            </motion.div>
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center space-x-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors">
+            <Icon className="h-6 w-6 text-blue-600" />
           </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-secondary-gray group-hover:text-gray-600 transition-colors duration-300 mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>{description}</p>
-          
-          {usageCount > 0 && (
-            <Badge variant="secondary" className="text-xs">
-              Used {usageCount} time{usageCount !== 1 ? 's' : ''}
-            </Badge>
+          {onToggleFavorite && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite();
+              }}
+            >
+              <Heart
+                className={cn(
+                  "h-4 w-4 transition-colors",
+                  isFavorite ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-red-500"
+                )}
+              />
+            </Button>
           )}
-        </CardContent>
-        
-        {/* Animated Border Effect */}
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-blue/20 via-transparent to-primary-blue/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-      </Card>
-    </motion.div>
+        </div>
+      </div>
+      
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+          {title}
+        </h3>
+        <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+      </div>
+      
+      {usageCount > 0 && (
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <span className="text-xs text-gray-500">
+            Used {usageCount} time{usageCount !== 1 ? 's' : ''}
+          </span>
+        </div>
+      )}
+    </div>
   );
 }
