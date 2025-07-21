@@ -48,7 +48,7 @@ const categories: ToolCategory[] = [
     name: "Image Tools", 
     description: "Image processing and generation tools",
     icon: Image,
-    tools: ["image-resize", "image-cropper", "qr-code-gen", "svg-blob-generator", "svg-pattern-generator", "svg-to-png-converter"]
+    tools: ["image-resize", "image-cropper", "qr-code-gen", "svg-blob-generator", "svg-pattern-generator", "svg-to-png-converter", "document-scanner-effect"]
   },
   {
     id: "css-tools",
