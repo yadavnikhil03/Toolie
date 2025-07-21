@@ -10,6 +10,7 @@ import { ToolCategories, toolCategories } from "@/components/tool-categories";
 import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, type LucideIcon } from 'lucide-react';
 
 // Import tool components lazily
+const CaseConverterTool = React.lazy(() => import("@/components/tools/case-converter"));
 const PdfMergeTool = React.lazy(() => import("@/components/tools/pdf-merge").then(m => ({ default: m.PdfMergeTool })));
 const ImageResizeTool = React.lazy(() => import("@/components/tools/image-resize").then(m => ({ default: m.ImageResizeTool })));
 const Mp3TrimTool = React.lazy(() => import("@/components/tools/mp3-trim").then(m => ({ default: m.Mp3TrimTool })));
@@ -24,6 +25,7 @@ const HashGeneratorTool = React.lazy(() => import("@/components/tools/hash-gener
 const JsonFormatterTool = React.lazy(() => import("@/components/tools/json-formatter").then(m => ({ default: m.JsonFormatterTool })));
 
 type ToolKey =
+  | "caseConverter"
   | "pdfMerge"
   | "imageResize"
   | "mp3Trim"
@@ -45,6 +47,12 @@ interface ToolConfig {
 }
 
 const tools: Record<ToolKey, ToolConfig> = {
+  caseConverter: {
+    title: "Case Converter",
+    description: "Convert text between different case formats.",
+    icon: Type,
+    component: CaseConverterTool,
+  },
   pdfMerge: {
     title: "PDF Merge / Split",
     description: "Combine or divide PDF documents.",
@@ -122,11 +130,12 @@ const tools: Record<ToolKey, ToolConfig> = {
 export default function HomePage() {
   const [openTool, setOpenTool] = React.useState<ToolKey | null>(null);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedCategory, setSelectedCategory] = React.useState("all");
+  const [selectedCategory, setSelectedCategory] = React.useState("favorite");
 
 
   const getToolIdFromKey = (key: ToolKey): string => {
     const keyToIdMap: Record<ToolKey, string> = {
+      caseConverter: "case-converter",
       pdfMerge: "pdf-merge",
       imageResize: "image-resize", 
       mp3Trim: "mp3-trim",
@@ -147,15 +156,17 @@ export default function HomePage() {
   const filteredTools = React.useMemo(() => {
     let filtered = Object.entries(tools);
   
-
-    if (selectedCategory !== "all") {
+    // Filter by category if a specific category is selected and it has tools
+    if (selectedCategory !== "favorite") {
       const categoryTools = toolCategories.find(cat => cat.id === selectedCategory)?.tools || [];
-      filtered = filtered.filter(([key]) => {
-        const toolId = getToolIdFromKey(key as ToolKey);
-        return categoryTools.includes(toolId);
-      });
+      if (categoryTools.length > 0) {
+        filtered = filtered.filter(([key]) => {
+          const toolId = getToolIdFromKey(key as ToolKey);
+          return categoryTools.includes(toolId);
+        });
+      }
     }
-
+    // For "favorite" category, show all tools for now (can be customized later)
 
     if (searchQuery) {
       filtered = filtered.filter(([_, tool]) =>

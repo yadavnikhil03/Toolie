@@ -3,12 +3,14 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { 
-  Wrench, 
+  Heart,
   FileText, 
   Type, 
   Image, 
   Code2, 
-  Zap,
+  Palette,
+  Share2,
+  Wrench,
   type LucideIcon 
 } from 'lucide-react';
 
@@ -28,57 +30,71 @@ interface ToolCategoriesProps {
 
 const categories: ToolCategory[] = [
   {
-    id: "all",
-    name: "All Tools",
-    description: "Browse all available tools",
-    icon: Wrench,
+    id: "favorite",
+    name: "Favorite Tools",
+    description: "Your most used tools",
+    icon: Heart,
     tools: []
-  },
-  {
-    id: "file-processing",
-    name: "File Processing",
-    description: "PDF and document processing tools",
-    icon: FileText,
-    tools: ["pdf-merge"]
   },
   {
     id: "text-tools",
     name: "Text Tools",
     description: "Text formatting and processing utilities",
     icon: Type,
-    tools: ["text-formatter", "json-formatter"]
+    tools: ["case-converter", "text-formatter", "json-formatter", "base64-tool"]
   },
   {
-    id: "media-images",
-    name: "Media & Images",
-    description: "Image and media processing tools",
+    id: "image-tools",
+    name: "Image Tools", 
+    description: "Image processing and generation tools",
     icon: Image,
-    tools: ["image-resize", "mp3-trim", "qr-code-gen"]
+    tools: ["image-resize", "qr-code-gen"]
   },
   {
-    id: "data-code",
-    name: "Data & Code",
-    description: "Developer tools and data utilities",
+    id: "css-tools",
+    name: "CSS Tools",
+    description: "CSS and styling utilities",
     icon: Code2,
-    tools: ["base64-tool", "hash-generator", "timestamp-converter"]
+    tools: []
   },
   {
-    id: "utilities",
-    name: "Utilities",
-    description: "General purpose utility tools",
-    icon: Zap,
-    tools: ["password-generator", "unit-converter", "color-palette"]
+    id: "coding-tools",
+    name: "Coding Tools",
+    description: "Developer tools and utilities",
+    icon: Code2,
+    tools: ["hash-generator", "timestamp-converter"]
+  },
+  {
+    id: "color-tools",
+    name: "Color Tools",
+    description: "Color palettes and utilities",
+    icon: Palette,
+    tools: ["color-palette"]
+  },
+  {
+    id: "social-media-tools",
+    name: "Social Media Tools",
+    description: "Social media content tools",
+    icon: Share2,
+    tools: []
+  },
+  {
+    id: "miscellaneous-tools",
+    name: "Miscellaneous Tools",
+    description: "Various utility tools",
+    icon: Wrench,
+    tools: ["password-generator", "unit-converter", "pdf-merge", "mp3-trim"]
   }
 ];
 
 export function ToolCategories({
-  selectedCategory = "all",
+  selectedCategory = "favorite",
   onCategorySelect,
   className,
 }: ToolCategoriesProps) {
   return (
     <div className={cn("w-full", className)}>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
         {categories.map((category) => (
           <button
             key={category.id}
@@ -127,33 +143,43 @@ export const toolCategories: Array<{
   tools: string[];
 }> = [
   {
-    id: "all",
-    name: "All Tools",
+    id: "favorite",
+    name: "Favorite Tools",
     tools: []
-  },
-  {
-    id: "file-processing",
-    name: "File Processing", 
-    tools: ["pdf-merge"]
   },
   {
     id: "text-tools",
     name: "Text Tools",
-    tools: ["text-formatter", "json-formatter"]
+    tools: ["case-converter", "text-formatter", "json-formatter", "base64-tool"]
   },
   {
-    id: "media-images",
-    name: "Media & Images",
-    tools: ["image-resize", "mp3-trim", "qr-code-gen"]
+    id: "image-tools", 
+    name: "Image Tools",
+    tools: ["image-resize", "qr-code-gen"]
   },
   {
-    id: "data-code",
-    name: "Data & Code",
-    tools: ["base64-tool", "hash-generator", "timestamp-converter"]
+    id: "css-tools",
+    name: "CSS Tools",
+    tools: []
   },
   {
-    id: "utilities",
-    name: "Utilities",
-    tools: ["password-generator", "unit-converter", "color-palette"]
+    id: "coding-tools",
+    name: "Coding Tools",
+    tools: ["hash-generator", "timestamp-converter"]
+  },
+  {
+    id: "color-tools",
+    name: "Color Tools",
+    tools: ["color-palette"]
+  },
+  {
+    id: "social-media-tools",
+    name: "Social Media Tools",
+    tools: []
+  },
+  {
+    id: "miscellaneous-tools",
+    name: "Miscellaneous Tools",
+    tools: ["password-generator", "unit-converter", "pdf-merge", "mp3-trim"]
   }
 ];
