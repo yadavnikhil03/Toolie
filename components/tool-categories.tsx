@@ -55,7 +55,7 @@ const categories: ToolCategory[] = [
     name: "CSS Tools",
     description: "CSS and styling utilities",
     icon: Code2,
-    tools: []
+    tools: ["css-loader-generator"]
   },
   {
     id: "coding-tools",

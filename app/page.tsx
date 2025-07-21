@@ -7,7 +7,7 @@ import { ToolCard } from "@/components/tool-card";
 import { ToolModal } from "@/components/tool-modal";
 import { ToolSearch } from "@/components/tool-search";
 import { ToolCategories, toolCategories } from "@/components/tool-categories";
-import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, Calculator, PenTool, Eye, Crop, Sparkles, FileImage, Scan, type LucideIcon } from 'lucide-react';
+import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, Calculator, PenTool, Eye, Crop, Sparkles, FileImage, Scan, Loader2, type LucideIcon } from 'lucide-react';
 
 // Import tool components lazily
 const CaseConverterTool = React.lazy(() => import("@/components/tools/case-converter"));
@@ -32,6 +32,7 @@ const SvgBlobGeneratorTool = React.lazy(() => import("@/components/tools/svg-blo
 const SvgPatternGeneratorTool = React.lazy(() => import("@/components/tools/svg-pattern-generator"));
 const SvgToPngConverterTool = React.lazy(() => import("@/components/tools/svg-to-png-converter"));
 const DocumentScannerEffectTool = React.lazy(() => import("@/components/tools/document-scanner-effect"));
+const CssLoaderGeneratorTool = React.lazy(() => import("@/components/tools/css-loader-generator"));
 
 type ToolKey =
   | "caseConverter"
@@ -55,7 +56,8 @@ type ToolKey =
   | "svgBlobGenerator"
   | "svgPatternGenerator"
   | "svgToPngConverter"
-  | "documentScannerEffect";
+  | "documentScannerEffect"
+  | "cssLoaderGenerator";
 
 interface ToolConfig {
   title: string;
@@ -197,6 +199,12 @@ const tools: Record<ToolKey, ToolConfig> = {
     icon: Scan,
     component: DocumentScannerEffectTool,
   },
+  cssLoaderGenerator: {
+    title: "CSS Loader Generator",
+    description: "Generate beautiful CSS loading animations and spinners with customization.",
+    icon: Loader2,
+    component: CssLoaderGeneratorTool,
+  },
 };
 
 export default function HomePage() {
@@ -228,7 +236,8 @@ export default function HomePage() {
       svgBlobGenerator: "svg-blob-generator",
       svgPatternGenerator: "svg-pattern-generator",
       svgToPngConverter: "svg-to-png-converter",
-      documentScannerEffect: "document-scanner-effect"
+      documentScannerEffect: "document-scanner-effect",
+      cssLoaderGenerator: "css-loader-generator"
     };
     return keyToIdMap[key];
   };

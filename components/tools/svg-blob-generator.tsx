@@ -39,6 +39,7 @@ const SvgBlobGenerator: React.FC = () => {
   const [blobSeed, setBlobSeed] = useState<number>(Math.random());
   const [isImageLoading, setIsImageLoading] = useState<boolean>(false);
   const [imageError, setImageError] = useState<boolean>(false);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [localGrowth, setLocalGrowth] = useState<number>(6);
   const [localEdgeCount, setLocalEdgeCount] = useState<number>(6);
 
@@ -55,6 +56,8 @@ const SvgBlobGenerator: React.FC = () => {
     debounceTimerRef.current = setTimeout(() => {
       setGrowth(newGrowth);
       setEdgeCount(newEdgeCount);
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 400); // Clean 400ms animation
     }, 100); // 100ms debounce for smooth updates
   }, []);
 
@@ -202,6 +205,8 @@ const SvgBlobGenerator: React.FC = () => {
 
   const shuffleBlob = () => {
     setBlobSeed(Math.random());
+    setIsAnimating(true);
+    setTimeout(() => setIsAnimating(false), 400); // Clean 400ms animation
   };
 
   // Copy SVG to clipboard
@@ -244,7 +249,15 @@ const SvgBlobGenerator: React.FC = () => {
     generateSvg();
   }, [generateSvg]);
 
-  // SVG regeneration happens automatically through useEffect dependencies
+  // Animate blob changes smoothly
+  useEffect(() => {
+    setIsAnimating(true);
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [growth, edgeCount, fillColor, blobSeed]);
 
   // Preset colors
   const presetColors = [
@@ -283,7 +296,7 @@ const SvgBlobGenerator: React.FC = () => {
               <div className="flex items-center justify-between">
                 <Label className="text-base font-medium">Preview</Label>
                 <div className="flex gap-2">
-                  <Button onClick={shuffleBlob} variant="outline" size="sm" className="min-w-[90px] min-h-[36px] justify-center">
+                  <Button onClick={shuffleBlob} variant="outline" size="sm" className="min-w-[90px]">
                     <Shuffle className="h-4 w-4 mr-2" />
                     Shuffle
                   </Button>
@@ -292,17 +305,16 @@ const SvgBlobGenerator: React.FC = () => {
               
               <div className="relative bg-gray-50 rounded-lg p-8 min-h-[400px] flex items-center justify-center">
                 <style jsx>{`
-                  .blob-container {
-                    transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
-                  }
-                  
-                  .blob-container svg {
-                    transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
-                  }
-                  
                   .blob-container svg path {
-                    transition: d 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), 
-                                fill 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+                    transition: d 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                  }
+                  
+                  .blob-container {
+                    transition: opacity 0.2s ease-out;
+                  }
+                  
+                  .blob-morphing {
+                    opacity: 0.85;
                   }
                 `}</style>
                 {isImageLoading && useImageBackground ? (
@@ -313,7 +325,9 @@ const SvgBlobGenerator: React.FC = () => {
                 ) : (
                   <div 
                     ref={canvasRef}
-                    className="w-80 h-80 blob-container"
+                    className={`w-80 h-80 blob-container ${
+                      isAnimating ? 'blob-morphing' : ''
+                    }`}
                     dangerouslySetInnerHTML={{ __html: svgCode }}
                   />
                 )}
@@ -487,6 +501,8 @@ const SvgBlobGenerator: React.FC = () => {
                         setLocalEdgeCount(4); 
                         setGrowth(4); 
                         setEdgeCount(4);
+                        setIsAnimating(true);
+                        setTimeout(() => setIsAnimating(false), 400);
                       }}
                       variant="outline"
                       size="sm"
@@ -500,6 +516,8 @@ const SvgBlobGenerator: React.FC = () => {
                         setLocalEdgeCount(6); 
                         setGrowth(6); 
                         setEdgeCount(6);
+                        setIsAnimating(true);
+                        setTimeout(() => setIsAnimating(false), 400);
                       }}
                       variant="outline"
                       size="sm"
@@ -513,6 +531,8 @@ const SvgBlobGenerator: React.FC = () => {
                         setLocalEdgeCount(8); 
                         setGrowth(8); 
                         setEdgeCount(8);
+                        setIsAnimating(true);
+                        setTimeout(() => setIsAnimating(false), 400);
                       }}
                       variant="outline"
                       size="sm"
@@ -526,6 +546,8 @@ const SvgBlobGenerator: React.FC = () => {
                         setLocalEdgeCount(10); 
                         setGrowth(9); 
                         setEdgeCount(10);
+                        setIsAnimating(true);
+                        setTimeout(() => setIsAnimating(false), 400);
                       }}
                       variant="outline"
                       size="sm"
@@ -544,7 +566,7 @@ const SvgBlobGenerator: React.FC = () => {
                   Generate Variations
                 </Label>
                 <div className="flex gap-2">
-                  <Button onClick={shuffleBlob} className="flex-1 min-h-[40px] justify-center">
+                  <Button onClick={shuffleBlob} className="flex-1 min-h-[40px]">
                     <Shuffle className="h-4 w-4 mr-2" />
                     Generate New Shape
                   </Button>
@@ -554,7 +576,7 @@ const SvgBlobGenerator: React.FC = () => {
                       shuffleBlob();
                     }}
                     variant="outline"
-                    className="min-h-[40px] min-w-[110px] px-4 justify-center"
+                    className="min-h-[40px] px-4"
                   >
                     <Sparkles className="h-4 w-4 mr-2" />
                     Random All
