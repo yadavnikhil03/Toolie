@@ -14,6 +14,7 @@ const CaseConverterTool = React.lazy(() => import("@/components/tools/case-conve
 const LetterCounterTool = React.lazy(() => import("@/components/tools/letter-counter"));
 const TextToHandwritingTool = React.lazy(() => import("@/components/tools/text-to-handwriting"));
 const BionicReadingTool = React.lazy(() => import("@/components/tools/bionic-reading"));
+const GoogleFontsPairFinderTool = React.lazy(() => import("@/components/tools/google-fonts-pair-finder"));
 const PdfMergeTool = React.lazy(() => import("@/components/tools/pdf-merge").then(m => ({ default: m.PdfMergeTool })));
 const ImageResizeTool = React.lazy(() => import("@/components/tools/image-resize").then(m => ({ default: m.ImageResizeTool })));
 const Mp3TrimTool = React.lazy(() => import("@/components/tools/mp3-trim").then(m => ({ default: m.Mp3TrimTool })));
@@ -32,6 +33,7 @@ type ToolKey =
   | "letterCounter"
   | "textToHandwriting"
   | "bionicReading"
+  | "googleFontsPairFinder"
   | "pdfMerge"
   | "imageResize"
   | "mp3Trim"
@@ -76,6 +78,12 @@ const tools: Record<ToolKey, ToolConfig> = {
     description: "Convert text to Bionic Reading format for faster reading.",
     icon: Eye,
     component: BionicReadingTool,
+  },
+  googleFontsPairFinder: {
+    title: "Google Fonts Pair Finder",
+    description: "Discover perfect Google Font combinations for your projects.",
+    icon: Type,
+    component: GoogleFontsPairFinderTool,
   },
   pdfMerge: {
     title: "PDF Merge / Split",
@@ -163,6 +171,7 @@ export default function HomePage() {
       letterCounter: "letter-counter",
       textToHandwriting: "text-to-handwriting",
       bionicReading: "bionic-reading",
+      googleFontsPairFinder: "google-fonts-pair-finder",
       pdfMerge: "pdf-merge",
       imageResize: "image-resize", 
       mp3Trim: "mp3-trim",

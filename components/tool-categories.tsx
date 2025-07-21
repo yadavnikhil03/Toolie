@@ -41,7 +41,7 @@ const categories: ToolCategory[] = [
     name: "Text Tools",
     description: "Text formatting and processing utilities",
     icon: Type,
-    tools: ["case-converter", "letter-counter", "text-to-handwriting", "bionic-reading", "text-formatter", "json-formatter", "base64-tool"]
+    tools: ["case-converter", "letter-counter", "text-to-handwriting", "bionic-reading", "google-fonts-pair-finder", "text-formatter", "json-formatter", "base64-tool"]
   },
   {
     id: "image-tools",
