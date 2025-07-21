@@ -29,6 +29,7 @@ const Base64Tool = React.lazy(() => import("@/components/tools/base64-tool").the
 const HashGeneratorTool = React.lazy(() => import("@/components/tools/hash-generator").then(m => ({ default: m.HashGeneratorTool })));
 const JsonFormatterTool = React.lazy(() => import("@/components/tools/json-formatter").then(m => ({ default: m.JsonFormatterTool })));
 const SvgBlobGeneratorTool = React.lazy(() => import("@/components/tools/svg-blob-generator"));
+const SvgPatternGeneratorTool = React.lazy(() => import("@/components/tools/svg-pattern-generator"));
 
 type ToolKey =
   | "caseConverter"
@@ -49,7 +50,8 @@ type ToolKey =
   | "base64Tool"
   | "hashGenerator"
   | "jsonFormatter"
-  | "svgBlobGenerator";
+  | "svgBlobGenerator"
+  | "svgPatternGenerator";
 
 interface ToolConfig {
   title: string;
@@ -173,6 +175,12 @@ const tools: Record<ToolKey, ToolConfig> = {
     icon: Sparkles,
     component: SvgBlobGeneratorTool,
   },
+  svgPatternGenerator: {
+    title: "SVG Pattern Generator",
+    description: "Create beautiful SVG background patterns with customizable shapes.",
+    icon: Sparkles,
+    component: SvgPatternGeneratorTool,
+  },
 };
 
 export default function HomePage() {
@@ -201,7 +209,8 @@ export default function HomePage() {
       base64Tool: "base64-tool",
       hashGenerator: "hash-generator",
       jsonFormatter: "json-formatter",
-      svgBlobGenerator: "svg-blob-generator"
+      svgBlobGenerator: "svg-blob-generator",
+      svgPatternGenerator: "svg-pattern-generator"
     };
     return keyToIdMap[key];
   };
