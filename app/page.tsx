@@ -7,7 +7,7 @@ import { ToolCard } from "@/components/tool-card";
 import { ToolModal } from "@/components/tool-modal";
 import { ToolSearch } from "@/components/tool-search";
 import { ToolCategories, toolCategories } from "@/components/tool-categories";
-import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, Calculator, PenTool, Eye, Crop, Sparkles, type LucideIcon } from 'lucide-react';
+import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, Calculator, PenTool, Eye, Crop, Sparkles, FileImage, type LucideIcon } from 'lucide-react';
 
 // Import tool components lazily
 const CaseConverterTool = React.lazy(() => import("@/components/tools/case-converter"));
@@ -30,6 +30,7 @@ const HashGeneratorTool = React.lazy(() => import("@/components/tools/hash-gener
 const JsonFormatterTool = React.lazy(() => import("@/components/tools/json-formatter").then(m => ({ default: m.JsonFormatterTool })));
 const SvgBlobGeneratorTool = React.lazy(() => import("@/components/tools/svg-blob-generator"));
 const SvgPatternGeneratorTool = React.lazy(() => import("@/components/tools/svg-pattern-generator"));
+const SvgToPngConverterTool = React.lazy(() => import("@/components/tools/svg-to-png-converter"));
 
 type ToolKey =
   | "caseConverter"
@@ -51,7 +52,8 @@ type ToolKey =
   | "hashGenerator"
   | "jsonFormatter"
   | "svgBlobGenerator"
-  | "svgPatternGenerator";
+  | "svgPatternGenerator"
+  | "svgToPngConverter";
 
 interface ToolConfig {
   title: string;
@@ -181,6 +183,12 @@ const tools: Record<ToolKey, ToolConfig> = {
     icon: Sparkles,
     component: SvgPatternGeneratorTool,
   },
+  svgToPngConverter: {
+    title: "SVG to PNG Converter",
+    description: "Convert SVG vector graphics to high-quality PNG images.",
+    icon: FileImage,
+    component: SvgToPngConverterTool,
+  },
 };
 
 export default function HomePage() {
@@ -210,7 +218,8 @@ export default function HomePage() {
       hashGenerator: "hash-generator",
       jsonFormatter: "json-formatter",
       svgBlobGenerator: "svg-blob-generator",
-      svgPatternGenerator: "svg-pattern-generator"
+      svgPatternGenerator: "svg-pattern-generator",
+      svgToPngConverter: "svg-to-png-converter"
     };
     return keyToIdMap[key];
   };
