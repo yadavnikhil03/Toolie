@@ -30,105 +30,74 @@ interface ToolCategoriesProps {
 
 const categories: ToolCategory[] = [
   {
-    id: "favorite",
-    name: "Favorite Tools",
-    description: "Your most used tools",
-    icon: Heart,
-    tools: []
-  },
-  {
     id: "text-tools",
     name: "Text Tools",
     description: "Text formatting and processing utilities",
     icon: Type,
-    tools: ["case-converter", "letter-counter", "text-to-handwriting", "bionic-reading", "google-fonts-pair-finder", "text-formatter", "json-formatter", "base64-tool"]
+    tools: ["caseConverter", "letterCounter", "textToHandwriting", "bionicReading", "googleFontsPairFinder", "textFormatter", "jsonFormatter", "base64Tool"]
   },
   {
     id: "image-tools",
     name: "Image Tools", 
     description: "Image processing and generation tools",
     icon: Image,
-    tools: ["image-resize", "image-cropper", "qr-code-gen", "svg-blob-generator", "svg-pattern-generator", "svg-to-png-converter", "document-scanner-effect"]
-  },
-  {
-    id: "css-tools",
-    name: "CSS Tools",
-    description: "CSS and styling utilities",
-    icon: Code2,
-    tools: ["css-loader-generator"]
+    tools: ["imageResize", "imageCropper", "qrCodeGen", "svgBlobGenerator", "svgPatternGenerator", "svgToPngConverter", "documentScannerEffect"]
   },
   {
     id: "coding-tools",
     name: "Coding Tools",
     description: "Developer tools and utilities",
     icon: Code2,
-    tools: ["hash-generator", "timestamp-converter"]
+    tools: ["hashGenerator", "timestampConverter"]
   },
   {
     id: "color-tools",
     name: "Color Tools",
     description: "Color palettes and utilities",
     icon: Palette,
-    tools: ["color-palette"]
-  },
-  {
-    id: "social-media-tools",
-    name: "Social Media Tools",
-    description: "Social media content tools",
-    icon: Share2,
-    tools: []
+    tools: ["colorPalette"]
   },
   {
     id: "miscellaneous-tools",
     name: "Miscellaneous Tools",
     description: "Various utility tools",
     icon: Wrench,
-    tools: ["password-generator", "unit-converter", "pdf-merge", "mp3-trim"]
+    tools: ["passwordGenerator", "unitConverter", "pdfMerge", "mp3Trim"]
   }
 ];
 
 export function ToolCategories({
-  selectedCategory = "favorite",
+  selectedCategory = "text-tools",
   onCategorySelect,
   className,
 }: ToolCategoriesProps) {
   return (
     <div className={cn("w-full", className)}>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+      {/* Option 1: Modern Horizontal Pills */}
+      <div className="flex flex-wrap gap-2 md:gap-3">
         {categories.map((category) => (
           <button
             key={category.id}
             onClick={() => onCategorySelect?.(category.id)}
             className={cn(
-              "group relative rounded-lg border p-6 text-left transition-all duration-200 hover:shadow-lg",
+              "group flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200 hover:shadow-sm",
               selectedCategory === category.id
-                ? "border-blue-300 bg-blue-50 shadow-md"
-                : "border-gray-200 bg-white hover:border-gray-300"
+                ? "border-blue-500 bg-blue-500 text-white shadow-md"
+                : "border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50"
             )}
           >
-            <div className="flex flex-col items-center text-center space-y-3">
-              <div className={cn(
-                "flex h-12 w-12 items-center justify-center rounded-lg transition-colors",
-                selectedCategory === category.id
-                  ? "bg-blue-100 text-blue-600"
-                  : "bg-gray-50 text-gray-600 group-hover:bg-gray-100"
-              )}>
-                <category.icon className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className={cn(
-                  "font-medium transition-colors",
-                  selectedCategory === category.id
-                    ? "text-blue-900"
-                    : "text-gray-900 group-hover:text-gray-700"
-                )}>
-                  {category.name}
-                </h3>
-                <p className="text-xs text-gray-500 mt-1">
-                  {category.tools.length > 0 ? `${category.tools.length} tools` : 'All tools'}
-                </p>
-              </div>
-            </div>
+            <category.icon className="h-4 w-4" />
+            <span className="text-sm font-medium whitespace-nowrap">
+              {category.name}
+            </span>
+            <span className={cn(
+              "text-xs px-2 py-0.5 rounded-full",
+              selectedCategory === category.id
+                ? "bg-blue-400 text-blue-50"
+                : "bg-gray-100 text-gray-500"
+            )}>
+              {category.tools.length}
+            </span>
           </button>
         ))}
       </div>
@@ -143,43 +112,28 @@ export const toolCategories: Array<{
   tools: string[];
 }> = [
   {
-    id: "favorite",
-    name: "Favorite Tools",
-    tools: []
-  },
-  {
     id: "text-tools",
     name: "Text Tools",
-    tools: ["case-converter", "letter-counter", "text-to-handwriting", "bionic-reading", "text-formatter", "json-formatter", "base64-tool"]
+    tools: ["caseConverter", "letterCounter", "textToHandwriting", "bionicReading", "googleFontsPairFinder", "textFormatter", "jsonFormatter", "base64Tool"]
   },
   {
     id: "image-tools", 
     name: "Image Tools",
-    tools: ["image-resize", "qr-code-gen"]
-  },
-  {
-    id: "css-tools",
-    name: "CSS Tools",
-    tools: []
+    tools: ["imageResize", "imageCropper", "qrCodeGen", "svgBlobGenerator", "svgPatternGenerator", "svgToPngConverter", "documentScannerEffect"]
   },
   {
     id: "coding-tools",
     name: "Coding Tools",
-    tools: ["hash-generator", "timestamp-converter"]
+    tools: ["hashGenerator", "timestampConverter"]
   },
   {
     id: "color-tools",
     name: "Color Tools",
-    tools: ["color-palette"]
-  },
-  {
-    id: "social-media-tools",
-    name: "Social Media Tools",
-    tools: []
+    tools: ["colorPalette"]
   },
   {
     id: "miscellaneous-tools",
     name: "Miscellaneous Tools",
-    tools: ["password-generator", "unit-converter", "pdf-merge", "mp3-trim"]
+    tools: ["passwordGenerator", "unitConverter", "pdfMerge", "mp3Trim"]
   }
 ];
