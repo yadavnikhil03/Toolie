@@ -41,7 +41,7 @@ const categories: ToolCategory[] = [
     name: "Text Tools",
     description: "Text formatting and processing utilities",
     icon: Type,
-    tools: ["case-converter", "text-formatter", "json-formatter", "base64-tool"]
+    tools: ["case-converter", "letter-counter", "text-formatter", "json-formatter", "base64-tool"]
   },
   {
     id: "image-tools",
@@ -150,7 +150,7 @@ export const toolCategories: Array<{
   {
     id: "text-tools",
     name: "Text Tools",
-    tools: ["case-converter", "text-formatter", "json-formatter", "base64-tool"]
+    tools: ["case-converter", "letter-counter", "text-formatter", "json-formatter", "base64-tool"]
   },
   {
     id: "image-tools", 

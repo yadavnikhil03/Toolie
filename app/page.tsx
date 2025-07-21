@@ -7,10 +7,11 @@ import { ToolCard } from "@/components/tool-card";
 import { ToolModal } from "@/components/tool-modal";
 import { ToolSearch } from "@/components/tool-search";
 import { ToolCategories, toolCategories } from "@/components/tool-categories";
-import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, type LucideIcon } from 'lucide-react';
+import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, Calculator, type LucideIcon } from 'lucide-react';
 
 // Import tool components lazily
 const CaseConverterTool = React.lazy(() => import("@/components/tools/case-converter"));
+const LetterCounterTool = React.lazy(() => import("@/components/tools/letter-counter"));
 const PdfMergeTool = React.lazy(() => import("@/components/tools/pdf-merge").then(m => ({ default: m.PdfMergeTool })));
 const ImageResizeTool = React.lazy(() => import("@/components/tools/image-resize").then(m => ({ default: m.ImageResizeTool })));
 const Mp3TrimTool = React.lazy(() => import("@/components/tools/mp3-trim").then(m => ({ default: m.Mp3TrimTool })));
@@ -26,6 +27,7 @@ const JsonFormatterTool = React.lazy(() => import("@/components/tools/json-forma
 
 type ToolKey =
   | "caseConverter"
+  | "letterCounter"
   | "pdfMerge"
   | "imageResize"
   | "mp3Trim"
@@ -52,6 +54,12 @@ const tools: Record<ToolKey, ToolConfig> = {
     description: "Convert text between different case formats.",
     icon: Type,
     component: CaseConverterTool,
+  },
+  letterCounter: {
+    title: "Letter Counter",
+    description: "Count letters, words, and sentences with social media limits.",
+    icon: Calculator,
+    component: LetterCounterTool,
   },
   pdfMerge: {
     title: "PDF Merge / Split",
@@ -136,6 +144,7 @@ export default function HomePage() {
   const getToolIdFromKey = (key: ToolKey): string => {
     const keyToIdMap: Record<ToolKey, string> = {
       caseConverter: "case-converter",
+      letterCounter: "letter-counter",
       pdfMerge: "pdf-merge",
       imageResize: "image-resize", 
       mp3Trim: "mp3-trim",
