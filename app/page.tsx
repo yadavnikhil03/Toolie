@@ -7,12 +7,13 @@ import { ToolCard } from "@/components/tool-card";
 import { ToolModal } from "@/components/tool-modal";
 import { ToolSearch } from "@/components/tool-search";
 import { ToolCategories, toolCategories } from "@/components/tool-categories";
-import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, Calculator, PenTool, type LucideIcon } from 'lucide-react';
+import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, Calculator, PenTool, Eye, type LucideIcon } from 'lucide-react';
 
 // Import tool components lazily
 const CaseConverterTool = React.lazy(() => import("@/components/tools/case-converter"));
 const LetterCounterTool = React.lazy(() => import("@/components/tools/letter-counter"));
 const TextToHandwritingTool = React.lazy(() => import("@/components/tools/text-to-handwriting"));
+const BionicReadingTool = React.lazy(() => import("@/components/tools/bionic-reading"));
 const PdfMergeTool = React.lazy(() => import("@/components/tools/pdf-merge").then(m => ({ default: m.PdfMergeTool })));
 const ImageResizeTool = React.lazy(() => import("@/components/tools/image-resize").then(m => ({ default: m.ImageResizeTool })));
 const Mp3TrimTool = React.lazy(() => import("@/components/tools/mp3-trim").then(m => ({ default: m.Mp3TrimTool })));
@@ -30,6 +31,7 @@ type ToolKey =
   | "caseConverter"
   | "letterCounter"
   | "textToHandwriting"
+  | "bionicReading"
   | "pdfMerge"
   | "imageResize"
   | "mp3Trim"
@@ -68,6 +70,12 @@ const tools: Record<ToolKey, ToolConfig> = {
     description: "Convert digital text into beautiful handwritten notes.",
     icon: PenTool,
     component: TextToHandwritingTool,
+  },
+  bionicReading: {
+    title: "Bionic Reading Converter",
+    description: "Convert text to Bionic Reading format for faster reading.",
+    icon: Eye,
+    component: BionicReadingTool,
   },
   pdfMerge: {
     title: "PDF Merge / Split",
@@ -154,6 +162,7 @@ export default function HomePage() {
       caseConverter: "case-converter",
       letterCounter: "letter-counter",
       textToHandwriting: "text-to-handwriting",
+      bionicReading: "bionic-reading",
       pdfMerge: "pdf-merge",
       imageResize: "image-resize", 
       mp3Trim: "mp3-trim",
