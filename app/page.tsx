@@ -7,7 +7,7 @@ import { ToolCard } from "@/components/tool-card";
 import { ToolModal } from "@/components/tool-modal";
 import { ToolSearch } from "@/components/tool-search";
 import { ToolCategories, toolCategories } from "@/components/tool-categories";
-import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, Calculator, PenTool, Eye, Crop, type LucideIcon } from 'lucide-react';
+import { FileText, Image, Music, Type, QrCode, Clock, Ruler, Palette, Key, Code2, Hash, FileJson, Calculator, PenTool, Eye, Crop, Sparkles, type LucideIcon } from 'lucide-react';
 
 // Import tool components lazily
 const CaseConverterTool = React.lazy(() => import("@/components/tools/case-converter"));
@@ -28,6 +28,7 @@ const PasswordGeneratorTool = React.lazy(() => import("@/components/tools/passwo
 const Base64Tool = React.lazy(() => import("@/components/tools/base64-tool").then(m => ({ default: m.Base64Tool })));
 const HashGeneratorTool = React.lazy(() => import("@/components/tools/hash-generator").then(m => ({ default: m.HashGeneratorTool })));
 const JsonFormatterTool = React.lazy(() => import("@/components/tools/json-formatter").then(m => ({ default: m.JsonFormatterTool })));
+const SvgBlobGeneratorTool = React.lazy(() => import("@/components/tools/svg-blob-generator"));
 
 type ToolKey =
   | "caseConverter"
@@ -47,7 +48,8 @@ type ToolKey =
   | "passwordGenerator"
   | "base64Tool"
   | "hashGenerator"
-  | "jsonFormatter";
+  | "jsonFormatter"
+  | "svgBlobGenerator";
 
 interface ToolConfig {
   title: string;
@@ -165,6 +167,12 @@ const tools: Record<ToolKey, ToolConfig> = {
     icon: FileJson,
     component: JsonFormatterTool,
   },
+  svgBlobGenerator: {
+    title: "SVG Blob Generator",
+    description: "Generate organic SVG blob shapes for backgrounds and design.",
+    icon: Sparkles,
+    component: SvgBlobGeneratorTool,
+  },
 };
 
 export default function HomePage() {
@@ -192,7 +200,8 @@ export default function HomePage() {
       passwordGenerator: "password-generator",
       base64Tool: "base64-tool",
       hashGenerator: "hash-generator",
-      jsonFormatter: "json-formatter"
+      jsonFormatter: "json-formatter",
+      svgBlobGenerator: "svg-blob-generator"
     };
     return keyToIdMap[key];
   };
