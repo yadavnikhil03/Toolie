@@ -111,11 +111,21 @@ export default function SmokeyCursor({
     const { gl, ext } = getWebGLContext(canvas);
     if (!gl || !ext) return;
 
-    // If no linear filtering, reduce resolution
-    if (!ext.supportLinearFiltering) {
-      config.DYE_RESOLUTION = 256;
-      config.SHADING = false;
-    }
+    // If no linear filtering, reduce resolution — apply mobile fallback tweaks
+if (!ext.supportLinearFiltering) {
+  config.DYE_RESOLUTION = 256;
+  config.SHADING = false;
+
+  // Make colors stronger and slower-changing on low-end devices
+  config.COLOR_UPDATE_SPEED = Math.max(1, Math.floor(config.COLOR_UPDATE_SPEED * 0.7));
+
+  // Reduce density dissipation so smoke fades slower (denser look)
+  config.DENSITY_DISSIPATION = Math.max(0.5, config.DENSITY_DISSIPATION * 0.25);
+
+  // Optional: keep splats a bit stronger on mobile so they remain visible
+  config.SPLAT_FORCE = Math.max(1000, Math.floor(config.SPLAT_FORCE * 1.1));
+}
+
 
     function getWebGLContext(canvas: HTMLCanvasElement) {
       const params = {
@@ -1395,12 +1405,15 @@ export default function SmokeyCursor({
     }
 
     function generateColor(): ColorRGB {
-      const c = HSVtoRGB(Math.random(), 1.0, 1.0);
-      c.r *= 0.15;
-      c.g *= 0.15;
-      c.b *= 0.15;
-      return c;
-    }
+  const c = HSVtoRGB(Math.random(), 1.0, 1.0);
+  // If the GPU doesn't support linear filtering, boost base color so alpha isn't tiny
+  const boost = ext && !ext.supportLinearFiltering ? 0.45 : 0.15;
+  c.r *= boost;
+  c.g *= boost;
+  c.b *= boost;
+  return c;
+}
+
 
     function HSVtoRGB(h: number, s: number, v: number): ColorRGB {
       let r = 0,
